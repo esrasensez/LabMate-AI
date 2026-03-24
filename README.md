@@ -51,5 +51,4 @@ It helps users keep track of time-sensitive steps and review experiment notes in
 
 ## Project Notes
 
-This project was developed as part of the Future Talent Program app-preneur course.  
 The application was designed as a practical and creative prototype that combines experiment support, note organization, and timer-based reminders in a single interface.
