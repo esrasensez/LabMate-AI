@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LabMate AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --border: #30363d;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --accent: #58a6ff;
+      --accent-green: #3fb950;
+      --accent-amber: #d29922;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 4rem 1.5rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 2.75rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+
+    .tagline {
+      font-size: 1.125rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .card-icon svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .card:nth-child(1) .card-icon {
+      background: rgba(63, 185, 80, 0.15);
+      color: var(--accent-green);
+    }
+
+    .card:nth-child(2) .card-icon {
+      background: rgba(210, 153, 34, 0.15);
+      color: var(--accent-amber);
+    }
+
+    .card h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* Experiment Analysis Section */
+    .analysis-section {
+      margin-top: 4rem;
+      padding-top: 3rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .analysis-section h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .analysis-section h2 .icon {
+      color: var(--accent-green);
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-group select,
+    .form-group textarea,
+    .form-group input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.95rem;
+    }
+
+    .form-group select:focus,
+    .form-group textarea:focus,
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .form-group textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .btn-analyze {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .btn-analyze:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .btn-download {
+      margin-top: 1.25rem;
+      display: none;
+      padding: 0.7rem 1.25rem;
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .btn-download.visible {
+      display: inline-block;
+    }
+
+    .btn-download:hover {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    .button-row {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-clear {
+      padding: 0.75rem 1.25rem;
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s, transform 0.2s;
+    }
+
+    .btn-clear:hover {
+      color: var(--text);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .results-section {
+      margin-top: 2rem;
+      display: none;
+    }
+
+    .results-section.visible {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .results-section h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+
+    .result-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .result-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: border-color 0.2s;
+    }
+
+    .result-card:hover {
+      border-color: var(--accent);
+    }
+
+    .result-card h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: var(--accent);
+    }
+
+    .result-card .content {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .result-card .content ul {
+      margin: 0;
+      padding-left: 1.25rem;
+    }
+
+    .result-card .content li {
+      margin-bottom: 0.35rem;
+    }
+
+    .result-card .content p {
+      margin: 0 0 0.75rem 0;
+    }
+
+    .result-card .content p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Timer Reminder Section */
+    .timer-section {
+      margin-top: 4rem;
+      padding-top: 3rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .timer-section h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .timer-section h2 .icon {
+      color: var(--accent-amber);
+    }
+
+    .timer-form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    @media (max-width: 480px) {
+      .timer-form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .btn-timer {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--accent-amber);
+      color: var(--bg);
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .btn-timer:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .btn-timer:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .countdown-card {
+      margin-top: 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: none;
+    }
+
+    .countdown-card.visible {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .countdown-card.running {
+      border-color: var(--accent-amber);
+    }
+
+    .countdown-card.finished {
+      border-color: var(--accent-green);
+    }
+
+    .countdown-label {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .countdown-time {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.5rem;
+      font-weight: 500;
+      color: var(--accent-amber);
+    }
+
+    .countdown-card.finished .countdown-time {
+      color: var(--accent-green);
+    }
+
+    .timer-finished-message {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: rgba(63, 185, 80, 0.1);
+      border-radius: 8px;
+      color: var(--accent-green);
+      font-size: 0.95rem;
+      display: none;
+    }
+
+    .timer-finished-message.visible {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">LabMate AI</div>
+      <h1>Your Smart Lab Assistant</h1>
+      <p class="tagline">Streamline experiments and never miss a step. LabMate AI helps researchers stay organized and focused on what matters.</p>
+    </header>
+
+    <section class="cards">
+      <article class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 3v18h18"/>
+            <path d="m19 9-5 5-4-4-3 3"/>
+          </svg>
+        </div>
+        <h3>Experiment Analysis</h3>
+        <p>Track and analyze your experimental data with intelligent insights. Identify patterns and document results effortlessly.</p>
+      </article>
+      <article class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </div>
+        <h3>Timer Reminder</h3>
+        <p>Set reminders for incubation periods, reaction times, and critical checkpoints. Stay on schedule without the stress.</p>
+      </article>
+    </section>
+
+    <section class="analysis-section">
+      <h2>
+        <span class="icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 3v18h18"/>
+            <path d="m19 9-5 5-4-4-3 3"/>
+          </svg>
+        </span>
+        Experiment Analysis
+      </h2>
+      <form id="analysis-form">
+        <div class="form-group">
+          <label for="experiment-type">Experiment Type</label>
+          <select id="experiment-type" name="experiment-type" required>
+            <option value="">Select experiment type...</option>
+            <option value="PCR">PCR</option>
+            <option value="Gel Electrophoresis">Gel Electrophoresis</option>
+            <option value="Spectrophotometric Analysis">Spectrophotometric Analysis</option>
+            <option value="pH Measurement">pH Measurement</option>
+            <option value="Viscosity Test">Viscosity Test</option>
+            <option value="Incubation">Incubation</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="lab-notes">Lab Notes / Experiment Issues</label>
+          <textarea id="lab-notes" name="lab-notes" placeholder="Describe your experiment, observations, or any issues encountered..."></textarea>
+        </div>
+        <div class="button-row">
+          <button type="submit" class="btn-analyze">Analyze</button>
+          <button type="button" class="btn-clear" id="clear-analysis-btn">Clear</button>
+        </div>
+      </form>
+
+      <div id="results-section" class="results-section">
+        <h3>Analysis Results</h3>
+        <div class="result-cards">
+          <div class="result-card">
+            <h4>Possible Error Sources</h4>
+            <div id="result-errors" class="content"></div>
+          </div>
+          <div class="result-card">
+            <h4>Things to Check</h4>
+            <div id="result-checks" class="content"></div>
+          </div>
+          <div class="result-card">
+            <h4>Organized Note</h4>
+            <div id="result-organized" class="content"></div>
+          </div>
+          <div class="result-card">
+            <h4>Scientific Summary</h4>
+            <div id="result-summary" class="content"></div>
+          </div>
+        </div>
+        <button type="button" id="download-report-btn" class="btn-download" disabled>Download Report</button>
+      </div>
+    </section>
+
+    <section class="timer-section">
+      <h2>
+        <span class="icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </span>
+        Timer Reminder
+      </h2>
+      <form id="timer-form">
+        <div class="timer-form-row">
+          <div class="form-group">
+            <label for="step-template">Common Lab Step</label>
+            <select id="step-template" name="step-template">
+              <option value="">Select a common step...</option>
+              <option value="Incubation">Incubation</option>
+              <option value="Centrifugation">Centrifugation</option>
+              <option value="Heating">Heating</option>
+              <option value="Cooling">Cooling</option>
+              <option value="Mixing">Mixing</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-group hidden" id="step-name-group">
+            <label for="step-name">Step Name</label>
+            <input type="text" id="step-name" name="step-name" placeholder="Enter custom step name">
+          </div>
+        </div>
+        <div class="timer-form-row">
+          <div class="form-group">
+            <label for="duration">Duration (minutes)</label>
+            <input type="number" id="duration" name="duration" min="1" placeholder="e.g. 30" required>
+          </div>
+        </div>
+        <div class="button-row">
+          <button type="submit" class="btn-timer" id="start-timer-btn">Start Timer</button>
+          <button type="button" class="btn-clear" id="clear-timer-btn">Clear Timer</button>
+        </div>
+      </form>
+
+      <div id="countdown-card" class="countdown-card">
+        <div class="countdown-label" id="countdown-label">—</div>
+        <div class="countdown-time" id="countdown-display">00:00</div>
+        <div id="timer-finished-message" class="timer-finished-message"></div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    var analysisData = {
+      PCR: {
+        errors: [
+          'Primer dimer formation or non-specific binding',
+          'Insufficient or degraded template DNA',
+          'Wrong annealing temperature or cycling conditions',
+          'Contamination (carryover, environmental)',
+          'Incorrect Mg²⁺ or dNTP concentration'
+        ],
+        checks: [
+          'Primer design and specificity',
+          'Thermocycler calibration and lid temperature',
+          'PCR master mix preparation and aliquoting',
+          'Template quality and concentration',
+          'Gel or melt curve analysis of products'
+        ]
+      },
+      Incubation: {
+        errors: [
+          'Temperature fluctuation in incubator or water bath',
+          'Incorrect duration or timing',
+          'Condensation affecting sample viability',
+          'Improper atmospheric conditions (CO₂, O₂)',
+          'Cross-contamination between samples'
+        ],
+        checks: [
+          'Incubator/water bath calibration',
+          'Timer accuracy and record-keeping',
+          'Sealing of plates or tubes',
+          'Humidity and gas levels if required',
+          'Sample labeling and positioning'
+        ]
+      },
+      'pH Measurement': {
+        errors: [
+          'Calibration drift or improper calibration',
+          'Temperature effects on pH readings',
+          'Electrode contamination or dehydration',
+          'Incorrect buffer selection for calibration',
+          'Sample temperature mismatch with calibration'
+        ],
+        checks: [
+          'Two-point calibration before use',
+          'Electrode storage solution and condition',
+          'Buffer freshness and correct pH values',
+          'Rinsing between samples',
+          'Stirring speed consistency'
+        ]
+      },
+      general: {
+        errors: [
+          'Contamination of reagents or samples',
+          'Improper temperature control',
+          'Incorrect measurement or calibration',
+          'Human error in protocol execution'
+        ],
+        checks: [
+          'Equipment calibration status',
+          'Reagent expiration dates',
+          'Sample preparation and storage conditions',
+          'Environmental factors (humidity, temperature)'
+        ]
+      }
+    };
+
+    function escapeHtml(text) {
+      var div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function formatOrganizedNote(labNotes, experimentType) {
+      var trimmed = (labNotes || '').trim();
+      var html = '<p><strong>Experiment type:</strong> ' + escapeHtml(experimentType) + '</p>';
+      if (!trimmed) {
+        html += '<p><em>No notes provided.</em></p>';
+        return html;
+      }
+      var lines = trimmed.split(/\r?\n/).filter(function(line) { return line.trim(); });
+      if (lines.length <= 1) {
+        html += '<p><strong>Notes:</strong><br>' + escapeHtml(trimmed).replace(/\n/g, '<br>') + '</p>';
+        return html;
+      }
+      html += '<p><strong>Notes:</strong></p><ul>';
+      lines.forEach(function(line) {
+        var t = line.trim();
+        if (t) html += '<li>' + escapeHtml(t) + '</li>';
+      });
+      html += '</ul>';
+      return html;
+    }
+
+    function formatScientificSummary(experimentType, labNotes) {
+      var trimmed = (labNotes || '').trim();
+      var notePreview = trimmed ? (trimmed.length > 80 ? trimmed.substring(0, 80) + '…' : trimmed) : '';
+
+      if (experimentType === 'PCR') {
+        return '<p><strong>PCR experiment:</strong> ' +
+          (notePreview ? 'Your notes mention: "' + escapeHtml(notePreview) + '". ' : '') +
+          'Verify primer specificity and cycling conditions. Check for contamination and ensure template quality. Run appropriate controls.</p>';
+      }
+      if (experimentType === 'Incubation') {
+        return '<p><strong>Incubation experiment:</strong> ' +
+          (notePreview ? 'Your notes: "' + escapeHtml(notePreview) + '". ' : '') +
+          'Confirm temperature stability and duration. Document timing and conditions. Check for condensation or atmospheric issues if applicable.</p>';
+      }
+      if (experimentType === 'pH Measurement') {
+        return '<p><strong>pH measurement:</strong> ' +
+          (notePreview ? 'Your notes: "' + escapeHtml(notePreview) + '". ' : '') +
+          'Ensure proper calibration and electrode maintenance. Account for temperature effects. Record buffer values and sample conditions.</p>';
+      }
+      return '<p><strong>' + escapeHtml(experimentType) + ':</strong> ' +
+        (notePreview ? 'Notes: "' + escapeHtml(notePreview) + '". ' : '') +
+        'Review methodology and controls. Document any deviations from protocol. Consider repeating critical steps to validate results.</p>';
+    }
+
+    var latestAnalysisReport = null;
+
+    function stripHtml(html) {
+      var div = document.createElement('div');
+      div.innerHTML = html;
+      return div.textContent || div.innerText || '';
+    }
+
+    document.getElementById('analysis-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var experimentType = document.getElementById('experiment-type').value;
+      var labNotes = document.getElementById('lab-notes').value;
+
+      var data = analysisData[experimentType] || analysisData.general;
+
+      var errorsEl = document.getElementById('result-errors');
+      errorsEl.innerHTML = '<ul><li>' + data.errors.map(function(x) { return escapeHtml(x); }).join('</li><li>') + '</li></ul>';
+
+      var checksEl = document.getElementById('result-checks');
+      checksEl.innerHTML = '<ul><li>' + data.checks.map(function(x) { return escapeHtml(x); }).join('</li><li>') + '</li></ul>';
+
+      var organizedHtml = formatOrganizedNote(labNotes, experimentType);
+      var summaryHtml = formatScientificSummary(experimentType, labNotes);
+
+      document.getElementById('result-organized').innerHTML = organizedHtml;
+      document.getElementById('result-summary').innerHTML = summaryHtml;
+
+      document.getElementById('results-section').classList.add('visible');
+
+      latestAnalysisReport = {
+        experimentType: experimentType,
+        labNotes: labNotes.trim() || 'No notes provided.',
+        errors: data.errors.slice(),
+        checks: data.checks.slice(),
+        organizedNote: stripHtml(organizedHtml).trim(),
+        summary: stripHtml(summaryHtml).trim()
+      };
+
+      var downloadBtn = document.getElementById('download-report-btn');
+      downloadBtn.disabled = false;
+      downloadBtn.classList.add('visible');
+    });
+
+    document.getElementById('download-report-btn').addEventListener('click', function() {
+      if (!latestAnalysisReport) return;
+
+      var reportText =
+        'LabMate AI - Experiment Analysis Report\n' +
+        '=======================================\n\n' +
+        'Experiment Type:\n' + latestAnalysisReport.experimentType + '\n\n' +
+        'Lab Notes:\n' + latestAnalysisReport.labNotes + '\n\n' +
+        'Possible Error Sources:\n- ' + latestAnalysisReport.errors.join('\n- ') + '\n\n' +
+        'Things to Check:\n- ' + latestAnalysisReport.checks.join('\n- ') + '\n\n' +
+        'Organized Note:\n' + latestAnalysisReport.organizedNote + '\n\n' +
+        'Scientific Summary:\n' + latestAnalysisReport.summary + '\n';
+
+      var blob = new Blob([reportText], { type: 'text/plain;charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var link = document.createElement('a');
+      link.href = url;
+      link.download = 'labmate-analysis-report.txt';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    });
+
+    document.getElementById('clear-analysis-btn').addEventListener('click', function() {
+      document.getElementById('experiment-type').value = '';
+      document.getElementById('lab-notes').value = '';
+      document.getElementById('results-section').classList.remove('visible');
+      document.getElementById('result-errors').innerHTML = '';
+      document.getElementById('result-checks').innerHTML = '';
+      document.getElementById('result-organized').innerHTML = '';
+      document.getElementById('result-summary').innerHTML = '';
+
+      latestAnalysisReport = null;
+      var downloadBtn = document.getElementById('download-report-btn');
+      downloadBtn.disabled = true;
+      downloadBtn.classList.remove('visible');
+    });
+
+    // Timer Reminder
+    var timerInterval = null;
+    var remainingSeconds = 0;
+
+    function formatTime(seconds) {
+      var m = Math.floor(seconds / 60);
+      var s = seconds % 60;
+      return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+    }
+
+    function getTimerFinishedMessage(stepName) {
+      if (stepName.toLowerCase() === 'incubation') {
+        return 'Incubation time is over. You can remove the sample from the device.';
+      }
+      return stepName + ' time is over.';
+    }
+
+    document.getElementById('step-template').addEventListener('change', function(e) {
+      var selected = e.target.value;
+      var stepNameInput = document.getElementById('step-name');
+      var stepNameGroup = document.getElementById('step-name-group');
+
+      if (selected === 'Other') {
+        stepNameGroup.classList.remove('hidden');
+        stepNameInput.value = '';
+        stepNameInput.required = true;
+        stepNameInput.focus();
+        return;
+      }
+
+      stepNameGroup.classList.add('hidden');
+      stepNameInput.required = false;
+      stepNameInput.value = selected;
+    });
+
+    document.getElementById('timer-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var selectedStep = document.getElementById('step-template').value;
+      var customStep = document.getElementById('step-name').value.trim();
+      var stepName = selectedStep === 'Other' ? (customStep || 'Step') : (selectedStep || 'Step');
+      var duration = parseInt(document.getElementById('duration').value, 10);
+      if (duration < 1) return;
+
+      if (timerInterval) clearInterval(timerInterval);
+
+      remainingSeconds = duration * 60;
+      var countdownCard = document.getElementById('countdown-card');
+      var countdownLabel = document.getElementById('countdown-label');
+      var countdownDisplay = document.getElementById('countdown-display');
+      var finishedMessage = document.getElementById('timer-finished-message');
+      var startBtn = document.getElementById('start-timer-btn');
+      var finalMessage = getTimerFinishedMessage(stepName);
+
+      countdownCard.classList.add('visible', 'running');
+      countdownCard.classList.remove('finished');
+      finishedMessage.classList.remove('visible');
+      finishedMessage.textContent = '';
+      countdownLabel.textContent = stepName;
+      startBtn.disabled = true;
+
+      countdownDisplay.textContent = formatTime(remainingSeconds);
+
+      timerInterval = setInterval(function() {
+        remainingSeconds--;
+        countdownDisplay.textContent = formatTime(remainingSeconds);
+
+        if (remainingSeconds <= 0) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+          countdownCard.classList.remove('running');
+          countdownCard.classList.add('finished');
+          finishedMessage.textContent = finalMessage;
+          finishedMessage.classList.add('visible');
+          startBtn.disabled = false;
+          alert(finalMessage);
+        }
+      }, 1000);
+    });
+
+    document.getElementById('clear-timer-btn').addEventListener('click', function() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+
+      remainingSeconds = 0;
+      document.getElementById('step-template').value = '';
+      document.getElementById('step-name').value = '';
+      document.getElementById('step-name').required = false;
+      document.getElementById('step-name-group').classList.add('hidden');
+      document.getElementById('duration').value = '';
+
+      var countdownCard = document.getElementById('countdown-card');
+      var countdownLabel = document.getElementById('countdown-label');
+      var countdownDisplay = document.getElementById('countdown-display');
+      var finishedMessage = document.getElementById('timer-finished-message');
+      var startBtn = document.getElementById('start-timer-btn');
+
+      countdownLabel.textContent = '—';
+      countdownDisplay.textContent = '00:00';
+      finishedMessage.textContent = '';
+      finishedMessage.classList.remove('visible');
+      countdownCard.classList.remove('visible', 'running', 'finished');
+      startBtn.disabled = false;
+    });
+  </script>
+</body>
+</html>
